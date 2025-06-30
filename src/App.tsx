@@ -11,6 +11,8 @@ import Vehicles from "./pages/Vehicles";
 import Clients from "./pages/Clients";
 import Services from "./pages/Services";
 import Inventory from "./pages/Inventory";
+import Financial from "./pages/Financial";
+import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,9 +31,8 @@ const App = () => (
             <Route path="/clients" element={<Clients />} />
             <Route path="/services" element={<Services />} />
             <Route path="/inventory" element={<Inventory />} />
-            {/* Placeholder routes for remaining pages */}
-            <Route path="/financial" element={<div className="p-6"><h1 className="text-3xl font-bold">Financeiro</h1><p>Em desenvolvimento...</p></div>} />
-            <Route path="/reports" element={<div className="p-6"><h1 className="text-3xl font-bold">Relatórios</h1><p>Em desenvolvimento...</p></div>} />
+            <Route path="/financial" element={<Financial />} />
+            <Route path="/reports" element={<Reports />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
