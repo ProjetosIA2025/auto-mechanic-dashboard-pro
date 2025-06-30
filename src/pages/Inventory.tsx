@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Package, Plus, Search, Filter, TrendingUp, TrendingDown, AlertTriangle, Calendar } from "lucide-react";
+import { StockMovementForm } from "@/components/forms/StockMovementForm";
 
 const mockMovements = [
   {
@@ -103,6 +103,15 @@ export default function Inventory() {
 
   const getMovementColor = (type: string) => {
     return type === 'Entrada' ? 'text-green-600' : 'text-red-600';
+  };
+
+  const handleMovementSubmit = (data: any) => {
+    console.log('Nova Movimentação:', data);
+    setShowNewMovement(false);
+  };
+
+  const handleMovementCancel = () => {
+    setShowNewMovement(false);
   };
 
   return (
@@ -304,59 +313,18 @@ export default function Inventory() {
         </CardContent>
       </Card>
 
-      {/* Simple form modal would go here if showNewMovement is true */}
+      {/* Form modal */}
       {showNewMovement && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-md mx-4">
+          <Card className="w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
             <CardHeader>
-              <CardTitle>Nova Movimentação</CardTitle>
+              <CardTitle>Nova Movimentação de Estoque</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Produto</label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione um produto" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {mockParts.map((part) => (
-                      <SelectItem key={part.id} value={part.id}>
-                        {part.name} - {part.code}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Tipo</label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o tipo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Entrada">Entrada</SelectItem>
-                    <SelectItem value="Saída">Saída</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Quantidade</label>
-                <Input type="number" placeholder="0" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Motivo/OS</label>
-                <Input placeholder="Descreva o motivo da movimentação" />
-              </div>
-              <div className="flex gap-2 pt-4">
-                <Button 
-                  variant="outline" 
-                  className="flex-1"
-                  onClick={() => setShowNewMovement(false)}
-                >
-                  Cancelar
-                </Button>
-                <Button className="flex-1">Registrar</Button>
-              </div>
+            <CardContent>
+              <StockMovementForm
+                onSubmit={handleMovementSubmit}
+                onCancel={handleMovementCancel}
+              />
             </CardContent>
           </Card>
         </div>

@@ -1,10 +1,11 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Search, Wrench, Package, Edit, Trash2, AlertTriangle } from "lucide-react";
+import { ServiceForm } from "@/components/forms/ServiceForm";
+import { ProductForm } from "@/components/forms/ProductForm";
 
 const mockServices = [
   {
@@ -104,6 +105,8 @@ const mockParts = [
 export default function Services() {
   const [serviceSearch, setServiceSearch] = useState('');
   const [partSearch, setPartSearch] = useState('');
+  const [showNewServiceForm, setShowNewServiceForm] = useState(false);
+  const [showNewProductForm, setShowNewProductForm] = useState(false);
 
   const filteredServices = mockServices.filter(service => 
     service.name.toLowerCase().includes(serviceSearch.toLowerCase()) ||
@@ -117,6 +120,78 @@ export default function Services() {
   );
 
   const criticalStockParts = mockParts.filter(part => part.stock <= part.minStock);
+
+  const handleNewService = () => {
+    setShowNewServiceForm(true);
+  };
+
+  const handleNewProduct = () => {
+    setShowNewProductForm(true);
+  };
+
+  const handleServiceSubmit = (data: any) => {
+    console.log('Novo Serviço:', data);
+    setShowNewServiceForm(false);
+  };
+
+  const handleProductSubmit = (data: any) => {
+    console.log('Novo Produto:', data);
+    setShowNewProductForm(false);
+  };
+
+  const handleServiceCancel = () => {
+    setShowNewServiceForm(false);
+  };
+
+  const handleProductCancel = () => {
+    setShowNewProductForm(false);
+  };
+
+  if (showNewServiceForm) {
+    return (
+      <div className="p-6">
+        <div className="mb-6">
+          <Button variant="outline" onClick={() => setShowNewServiceForm(false)}>
+            ← Voltar para Serviços
+          </Button>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Cadastrar Novo Serviço</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ServiceForm
+              onSubmit={handleServiceSubmit}
+              onCancel={handleServiceCancel}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (showNewProductForm) {
+    return (
+      <div className="p-6">
+        <div className="mb-6">
+          <Button variant="outline" onClick={() => setShowNewProductForm(false)}>
+            ← Voltar para Produtos
+          </Button>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Cadastrar Novo Produto</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ProductForm
+              onSubmit={handleProductSubmit}
+              onCancel={handleProductCancel}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -183,7 +258,7 @@ export default function Services() {
                 </div>
               </CardContent>
             </Card>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleNewService}>
               <Plus className="h-4 w-4 mr-2" />
               Novo Serviço
             </Button>
@@ -266,7 +341,7 @@ export default function Services() {
                 </div>
               </CardContent>
             </Card>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleNewProduct}>
               <Plus className="h-4 w-4 mr-2" />
               Novo Produto
             </Button>

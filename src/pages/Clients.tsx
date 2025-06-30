@@ -1,9 +1,9 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search, Users, Car, FileText, Phone, Mail, MessageSquare, Edit, Eye, Trash2 } from "lucide-react";
+import { ClientForm } from "@/components/forms/ClientForm";
 
 const mockClients = [
   {
@@ -55,6 +55,7 @@ const mockClients = [
 export default function Clients() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClient, setSelectedClient] = useState<any>(null);
+  const [showNewClientForm, setShowNewClientForm] = useState(false);
 
   const filteredClients = mockClients.filter(client => 
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -70,6 +71,43 @@ export default function Clients() {
   const closeClientView = () => {
     setSelectedClient(null);
   };
+
+  const handleNewClient = () => {
+    setShowNewClientForm(true);
+  };
+
+  const handleClientSubmit = (data: any) => {
+    console.log('Novo Cliente:', data);
+    setShowNewClientForm(false);
+    // Aqui você integraria com a API/estado global
+  };
+
+  const handleClientCancel = () => {
+    setShowNewClientForm(false);
+  };
+
+  if (showNewClientForm) {
+    return (
+      <div className="p-6">
+        <div className="mb-6">
+          <Button variant="outline" onClick={() => setShowNewClientForm(false)}>
+            ← Voltar para Lista
+          </Button>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Cadastrar Novo Cliente</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ClientForm
+              onSubmit={handleClientSubmit}
+              onCancel={handleClientCancel}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (selectedClient) {
     return (
@@ -226,7 +264,7 @@ export default function Clients() {
           <h1 className="text-3xl font-bold text-gray-900">Clientes</h1>
           <p className="text-gray-600 mt-1">Gerencie todos os clientes da oficina</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleNewClient}>
           <Plus className="h-4 w-4 mr-2" />
           Novo Cliente
         </Button>

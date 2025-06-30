@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Search, Filter, FileText, Eye, Edit, Printer, MessageSquare } from "lucide-react";
+import { ServiceOrderForm } from "@/components/forms/ServiceOrderForm";
 
 const mockOrders = [
   {
@@ -58,6 +58,7 @@ const getStatusColor = (status: string) => {
 export default function Orders() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [showNewOrderForm, setShowNewOrderForm] = useState(false);
 
   const filteredOrders = mockOrders.filter(order => {
     const matchesSearch = order.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -67,6 +68,43 @@ export default function Orders() {
     return matchesSearch && matchesStatus;
   });
 
+  const handleNewOrder = () => {
+    setShowNewOrderForm(true);
+  };
+
+  const handleOrderSubmit = (data: any) => {
+    console.log('Nova OS:', data);
+    setShowNewOrderForm(false);
+    // Aqui você integraria com a API/estado global
+  };
+
+  const handleOrderCancel = () => {
+    setShowNewOrderForm(false);
+  };
+
+  if (showNewOrderForm) {
+    return (
+      <div className="p-6">
+        <div className="mb-6">
+          <Button variant="outline" onClick={() => setShowNewOrderForm(false)}>
+            ← Voltar para Lista
+          </Button>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Nova Ordem de Serviço</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ServiceOrderForm
+              onSubmit={handleOrderSubmit}
+              onCancel={handleOrderCancel}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -75,7 +113,7 @@ export default function Orders() {
           <h1 className="text-3xl font-bold text-gray-900">Ordens de Serviço</h1>
           <p className="text-gray-600 mt-1">Gerencie todas as ordens de serviço da oficina</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleNewOrder}>
           <Plus className="h-4 w-4 mr-2" />
           Nova OS
         </Button>

@@ -1,9 +1,9 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search, Car, History, Edit, AlertTriangle } from "lucide-react";
+import { VehicleForm } from "@/components/forms/VehicleForm";
 
 const mockVehicles = [
   {
@@ -49,6 +49,7 @@ const mockVehicles = [
 
 export default function Vehicles() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [showNewVehicleForm, setShowNewVehicleForm] = useState(false);
 
   const filteredVehicles = mockVehicles.filter(vehicle => 
     vehicle.plate.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -65,6 +66,43 @@ export default function Vehicles() {
     return diffDays <= 30;
   };
 
+  const handleNewVehicle = () => {
+    setShowNewVehicleForm(true);
+  };
+
+  const handleVehicleSubmit = (data: any) => {
+    console.log('Novo Veículo:', data);
+    setShowNewVehicleForm(false);
+    // Aqui você integraria com a API/estado global
+  };
+
+  const handleVehicleCancel = () => {
+    setShowNewVehicleForm(false);
+  };
+
+  if (showNewVehicleForm) {
+    return (
+      <div className="p-6">
+        <div className="mb-6">
+          <Button variant="outline" onClick={() => setShowNewVehicleForm(false)}>
+            ← Voltar para Lista
+          </Button>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Cadastrar Novo Veículo</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <VehicleForm
+              onSubmit={handleVehicleSubmit}
+              onCancel={handleVehicleCancel}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -73,7 +111,7 @@ export default function Vehicles() {
           <h1 className="text-3xl font-bold text-gray-900">Veículos</h1>
           <p className="text-gray-600 mt-1">Gerencie todos os veículos cadastrados</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleNewVehicle}>
           <Plus className="h-4 w-4 mr-2" />
           Cadastrar Veículo
         </Button>
